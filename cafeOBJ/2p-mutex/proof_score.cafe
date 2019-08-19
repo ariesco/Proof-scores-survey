@@ -1,0 +1,56 @@
+open 2P-MUTEX .
+  red inv(init) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq pc2(s) = rs .
+  red inv(s) implies inv(enter1(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq (pc2(s) = rs) = false .
+  red inv(s) implies inv(enter1(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq pc1(s) = cs .
+  red inv(s) implies inv(leave1(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq (pc1(s) = cs) = false .
+  red inv(s) implies inv(leave1(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq pc1(s) = rs .
+  red inv(s) implies inv(enter2(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq (pc1(s) = rs) = false .
+  red inv(s) implies inv(enter2(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq pc2(s) = cs .
+  red inv(s) implies inv(leave2(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+  eq [:nonexec] : inv(s) = true .
+  eq (pc2(s) = cs) = false .
+  red inv(s) implies inv(leave2(s)) .
+close
+
