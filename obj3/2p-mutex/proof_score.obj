@@ -1,0 +1,56 @@
+open 2P-MUTEX .
+  reduce inv(init) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq pc2(s) = rs .
+  reduce inv(s) implies inv(enter1(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq (pc2(s) = rs) = false .
+  reduce inv(s) implies inv(enter1(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq pc1(s) = cs .
+  reduce inv(s) implies inv(leave1(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq (pc1(s) = cs) = false .
+  reduce inv(s) implies inv(leave1(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq pc1(s) = rs .
+  reduce inv(s) implies inv(enter2(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq (pc1(s) = rs) = false .
+  reduce inv(s) implies inv(enter2(s)) .
+close
+
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq pc2(s) = cs .
+  reduce inv(s) implies inv(leave2(s)) .
+close
+open 2P-MUTEX .
+  op s : -> Sys .
+
+  eq (pc2(s) = cs) = false .
+  reduce inv(s) implies inv(leave2(s)) .
+close
+

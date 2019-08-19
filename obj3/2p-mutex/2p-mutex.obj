@@ -1,0 +1,61 @@
+obj LABEL is
+  sort Label .
+  ops rs cs : -> Label .
+
+  op _=_ : Label Label -> Bool [comm] .
+
+  var L : Label .
+
+  eq (L = L) = true .
+  eq (rs = cs) = false .
+endo
+
+th 2P-MUTEX is
+  protecting LABEL .
+  sort Sys .
+
+  op init : -> Sys .
+  op enter1 : Sys -> Sys .
+  op leave1 : Sys -> Sys .
+  op enter2 : Sys -> Sys .
+  op leave2 : Sys -> Sys .
+
+  op pc1 : Sys -> Label .
+  op pc2 : Sys -> Label .
+
+  var S : Sys .
+
+  eq pc1(init) = rs .
+  eq pc2(init) = rs .
+
+  op c-enter1 : Sys -> Bool .
+  eq c-enter1(S) = (pc2(S) = rs) .
+
+  cq pc1(enter1(S)) = cs     if c-enter1(S) .
+  cq pc2(enter1(S)) = pc2(S) if c-enter1(S) .
+  cq enter1(S)      = S      if not c-enter1(S) .
+
+  op c-leave1 : Sys -> Bool .
+  eq c-leave1(S) = (pc1(S) = cs) .
+
+  cq pc1(leave1(S)) = rs     if c-leave1(S) .
+  cq pc2(leave1(S)) = pc2(S) if c-leave1(S) .
+  cq leave1(S)      = S     if not c-leave1(S) .
+
+  op c-enter2 : Sys -> Bool .
+  eq c-enter2(S) = (pc1(S) = rs) .
+
+  cq pc1(enter2(S)) = pc1(S) if c-enter2(S) .
+  cq pc2(enter2(S)) = cs     if c-enter2(S) .
+  cq enter2(S)      = S      if not c-enter2(S) .
+
+  op c-leave2 : Sys -> Bool .
+  eq c-leave2(S) = (pc2(S) = cs) .
+
+  ceq pc1(leave2(S)) = pc1(S) if c-leave2(S) .
+  ceq pc2(leave2(S)) = rs     if c-leave2(S) .
+  ceq leave2(S)       = S     if not c-leave2(S) .
+
+  op inv : Sys -> Bool .
+  eq inv(S) = not ((pc1(S) = cs) and (pc2(S) = cs)) .
+endth
