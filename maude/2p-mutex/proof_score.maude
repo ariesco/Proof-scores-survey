@@ -1,0 +1,71 @@
+select 2P-MUTEX .
+red inv(init) .
+
+fth 2P-MUTEX-ENTER1-1 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq pc2(s) = rs .
+endfth
+red inv(s) implies inv(enter1(s)) .
+fth 2P-MUTEX-ENTER1-2 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq (pc2(s) = rs) = false .
+endfth
+red inv(s) implies inv(enter1(s)) .
+
+fth 2P-MUTEX-LEAVE1-1 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq pc1(s) = cs .
+endfth
+red inv(s) implies inv(leave1(s)) .
+fth 2P-MUTEX-LEAVE1-2 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq (pc1(s) = cs) = false .
+endfth
+red inv(s) implies inv(leave1(s)) .
+
+fth 2P-MUTEX-ENTER2-1 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq pc1(s) = rs .
+endfth
+red inv(s) implies inv(enter2(s)) .
+fth 2P-MUTEX-ENTER2-2 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq (pc1(s) = rs) = false .
+endfth
+red inv(s) implies inv(enter2(s)) .
+
+fth 2P-MUTEX-LEAVE2-1 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq pc2(s) = cs .
+endfth
+red inv(s) implies inv(leave2(s)) .
+fth 2P-MUTEX-LEAVE2-2 is
+  inc 2P-MUTEX .
+
+  op s : -> Sys .
+  eq inv(s) = true [nonexec] .
+  eq (pc2(s) = cs) = false .
+endfth
+red inv(s) implies inv(leave2(s)) .
+

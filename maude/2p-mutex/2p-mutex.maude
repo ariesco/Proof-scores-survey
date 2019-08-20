@@ -1,0 +1,63 @@
+fmod LABEL is
+  sort Label .
+  ops rs cs : -> Label [ctor] .
+
+  op _=_ : Label Label -> Bool .
+  var L : Label .
+  eq (L = L) = true .
+  eq (rs = cs) = false .
+endfm
+
+fth 2P-MUTEX is
+  pr LABEL .
+
+  sort Sys .
+  --- any initial state
+  op init : -> Sys [ctor] .
+  --- transitions
+  op enter1 : Sys -> Sys [ctor] .
+  op leave1 : Sys -> Sys [ctor] .
+  op enter2 : Sys -> Sys [ctor] .
+  op leave2 : Sys -> Sys [ctor] .
+  --- observations
+  op pc1 : Sys -> Label .
+  op pc2 : Sys -> Label .
+  --- Maude variables
+  var S : Sys .
+  --- for any initial state
+  eq pc1(init) = rs .
+  eq pc2(init) = rs .
+  --- for enter1
+  op c-enter1 : Sys -> Bool .
+  eq c-enter1(S) = (pc2(S) = rs) .
+  ---
+  ceq pc1(enter1(S)) = cs     if c-enter1(S) .
+  ceq pc2(enter1(S)) = pc2(S) if c-enter1(S) .
+  ceq enter1(S)      = S      if not c-enter1(S) .
+  --- for leave1
+  op c-leave1 : Sys -> Bool .
+  eq c-leave1(S) = (pc1(S) = cs) .
+  ---
+  ceq pc1(leave1(S)) = rs     if c-leave1(S) .
+  ceq pc2(leave1(S)) = pc2(S) if c-leave1(S) .
+  ceq leave1(S)       = S     if not c-leave1(S) .
+  --- for enter2
+  op c-enter2 : Sys -> Bool .
+  eq c-enter2(S) = (pc1(S) = rs) .
+  ---
+  ceq pc1(enter2(S)) = pc1(S) if c-enter2(S) .
+  ceq pc2(enter2(S)) = cs     if c-enter2(S) .
+  ceq enter2(S)      = S      if not c-enter2(S) .
+  --- for leave2
+  op c-leave2 : Sys -> Bool .
+  eq c-leave2(S) = (pc2(S) = cs) .
+  ---
+  ceq pc1(leave2(S)) = pc1(S) if c-leave2(S) .
+  ceq pc2(leave2(S)) = rs     if c-leave2(S) .
+  ceq leave2(S)       = S     if not c-leave2(S) .
+  ---
+  --- property to prove
+  ---
+  op inv : Sys -> Bool .
+  eq inv(S) = not ((pc1(S) = cs) and (pc2(S) = cs)) .
+endfth
