@@ -2,7 +2,7 @@ fmod LABEL is
   sort Label .
   ops rs cs : -> Label [ctor] .
 
-  op _=_ : Label Label -> Bool .
+  op _=_ : Label Label -> Bool [comm] .
   var L : Label .
   eq (L = L) = true .
   eq (rs = cs) = false .
