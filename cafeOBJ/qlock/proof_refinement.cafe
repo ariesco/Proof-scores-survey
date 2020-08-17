@@ -1,0 +1,102 @@
+open QLOCK .
+  op  s : -> Sys .
+  ops i j : -> Pid .
+
+  red inv1(s, i, j) .
+  red inv2(s, i) .
+close
+
+-- I) Base case
+open QLOCK .
+-- fresh constants
+   ops i j : -> Pid .
+-- |-
+   red inv1(init,i,j) .
+close
+
+open QLOCK .
+-- fresh constants
+   op i : -> Pid .
+-- |-
+   red inv2(init,i) .
+close
+
+-- First approach
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+   eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+   eq [:nonexec] : inv2(s,I:Pid) = true .
+-- |- (it does not)
+   red inv1(want(s,k),i,j) .
+close
+
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+  eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+-- assumptions
+   eq pc(s,k) = rs .
+-- |- (it does not)
+   red inv1(want(s,k),i,j) .
+close
+
+-- Proven the first leaf
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+  eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+-- assumptions
+   eq pc(s,k) = rs .
+   eq i = k .
+-- |-
+   red inv1(want(s,k),i,j) .
+close
+
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+  eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+-- assumptions
+   eq pc(s,k) = rs .
+   eq (i = k) = false .
+-- |- (it does not)
+   red inv1(want(s,k),i,j) .
+close
+
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+  eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+-- assumptions
+   eq pc(s,k) = rs .
+   eq (i = k) = false .
+   eq (j = k) = false .
+-- |- (it does not)
+   red inv1(want(s,k),i,j) .
+close
+
+-- Proven the second leaf
+open QLOCK .
+-- fresh constants
+   op s : -> Sys .
+   ops i j k : -> Pid .
+-- IH
+  eq [:nonexec] : inv1(s,I:Pid,J:Pid) = true .
+-- assumptions
+   eq pc(s,k) = rs .
+   eq (i = k) = false .
+   eq (j = k) = false .
+-- |-
+   red inv1(s,i,j) implies inv1(want(s,k),i,j) .
+close
