@@ -1,0 +1,27 @@
+-- for CafeOBJ 1.5.x
+
+mod* QUEUE{
+[Elt < Elt&Err]
+[Elt < NeQueue < Queue]
+op err : -> Elt
+op empty : -> Queue
+op _|_ : Queue Queue -> Queue {assoc id: empty}
+op _|_ : NeQueue Queue -> NeQueue {assoc id: empty}
+op _|_ : Queue NeQueue -> NeQueue {assoc id: empty}
+op enq : Queue Elt -> NeQueue
+op deq : Queue -> Queue
+op top : NeQueue -> Elt
+op top : Queue -> Elt&Err
+eq enq(empty,(x:Elt)) = x | empty .
+eq enq((y:Elt) | (q:Queue),(x:Elt)) = y | enq(q,x) .
+eq deq(empty) = empty .
+eq deq((x:Elt) | (q:Queue)) = q .
+eq top(empty) = err .
+eq top((x:Elt) | (q:Queue) ) = x .
+}
+
+
+open QUEUE .
+ops e1 e2 e3 : -> Elt .
+red deq(enq(e1 | e2, e3)) .
+close
